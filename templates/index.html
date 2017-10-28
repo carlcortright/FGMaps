@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+  <link rel="stylesheet" href="{{ url_for('static', filename = 'styles/main_style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename = 'styles/mapStyles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename = 'styles/spectrum.css') }}">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+  <!-- div to hold tooltip. -->
+  <div id="tooltip"></div>
+  <!-- row for spacing -->
+  <div class="row"></div>
+
+  <!-- Sidebar -->
+  <div class="col-md-2" style="max-height: 1000px;overflow: auto; margin: 20px">
+    <h2>Steps</h2>
+    <h3>1. Upload Data</h3>
+      <label class="btn btn-primary" for="my-file-selector">
+          <input id="my-file-selector" type="file" style="display:none"
+          onchange="$('#upload-file-info').html(this.files[0].name)">
+          Select File
+      </label>
+      <span class='label label-info' id="upload-file-info"></span>
+      <hr>
+      <h4><a href="/data/example.csv">Example Data</a></h4>
+      <h6>*Data must be saved in CSV format</h6>
+    <h3>2. Select Color</h3>
+    <div class="form-group">
+        <input type="text" id="custom">
+    </div>
+
+    <h3>3. Screenshot and Use</h3>
+  </div>
+
+  <!-- SVG and title -->
+  <h1 style="margin: 50px">Foundry Group Map Maker</h1>
+  <svg width="960" height="600" id="statesvg"></svg> <!-- svg to hold the map. -->
+
+</div>
+
+<!-- Create UStates map -->
+<script src="{{ url_for('static', filename = 'js/UStates.js') }}"></script>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="{{ url_for('static', filename = 'js/map.js') }}"></script>
+<script src="{{ url_for('static', filename = 'js/spectrum.js') }}"></script>
+<script>
+  $("#custom").spectrum({
+      color: "#f78f1e",
+      preferredFormat: "hex",
+      flat: true,
+      showInput: true,
+      showButtons: false,
+      move: function(color) {
+        updateMap(color.toHexString());
+      },
+  });
+</script>
+
+</body>
