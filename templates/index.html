@@ -15,7 +15,7 @@
   <!-- Sidebar -->
   <div class="col-md-2" style="max-height: 1000px;overflow: auto; margin: 20px">
     <h2>Steps</h2>
-    <h3>1. Upload Data</h3>
+    <h3>1. Upload Data <span class="glyphicon glyphicon-upload"></span></h3>
       <label class="btn btn-primary" for="my-file-selector">
           <input id="my-file-selector" type="file" style="display:none"
           onchange="$('#upload-file-info').html(this.files[0].name)">
@@ -25,12 +25,15 @@
       <hr>
       <h4><a href="/data/example.csv">Example Data</a></h4>
       <h6>*Data must be saved in CSV format</h6>
-    <h3>2. Select Color</h3>
+    
+    <br>
+    <h3>2. Select Color <span class="glyphicon glyphicon-tint"></span></h3>
     <div class="form-group">
         <input type="text" id="custom">
     </div>
 
-    <h3>3. Screenshot and Use</h3>
+    <br>
+    <h3>3. Screenshot and Use <span class="glyphicon glyphicon-scissors"></span></h3>
   </div>
 
   <!-- SVG and title -->
