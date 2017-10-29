@@ -8,7 +8,7 @@ import random
 ################################################################################
 UPLOAD_FOLDER = 'data/'
 ALLOWED_EXTENSIONS = set(["csv"])
-app = Flask(__name__, static_url_path='/static/')
+app = Flask(__name__, static_url_path='/static')
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config['SESSION_TYPE'] = 'filesystem'
 
