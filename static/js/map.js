@@ -36,7 +36,7 @@ var getUrlParameter = function getUrlParameter(sParam) {
 /*
 * Updates the map when a fund is selected/deselected
 */
-function updateMap(color, data) {
+function updateMap(color, data, minimum_opacity) {
   var StatesData = []
   var statesData = ["HI", "AK", "FL", "SC", "GA", "AL", "NC", "TN", "RI", "CT", "MA",
   "ME", "NH", "VT", "NY", "NJ", "PA", "DE", "MD", "WV", "KY", "OH",
@@ -65,11 +65,19 @@ function updateMap(color, data) {
       var inv=0;
       for(i = 0; i < data.length; i++){
         var obj = data[i]
-        if (obj.State === d) {
+        if (obj.State === d &&
+					 ((obj.Type.toLowerCase() == "fund" && document.getElementById("funds-color-box").checked)
+					  || obj.Type.toLowerCase() == "company" && document.getElementById("companies-color-box").checked)) {
           num += 1;
         }
       }
-      StatesData[d]={num:num, inv:inv.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), color:d3.interpolate("#FFFFFF", color)(num/largestState)};
+			if(num != 0){
+				var min_color = d3.interpolate("#FFFFFF", color)(minimum_opacity);
+	      StatesData[d]={num:num, inv:inv.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), color:d3.interpolate(min_color, color)(num/largestState)};
+			} else {
+				StatesData[d]={num:num, inv:inv.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","), color:d3.interpolate("#FFFFFF", color)(num/largestState)};
+			}
+
     });
 
   var width = 1000;
@@ -77,7 +85,7 @@ function updateMap(color, data) {
 
   // D3 Projection
   var projection = d3.geo.albersUsa()
-              .translate([(width/2) - 27.5, (height/2) - 17])  // translate to center of screen
+              .translate([(width/2) - 27.5, (height/2) - 17])  // translate to center of screen - this part is pretty hacky
               .scale([1265]);
 
   /* draw states on id #statesvg */
@@ -91,17 +99,27 @@ function updateMap(color, data) {
 
   for(i=0; i < data.length; i++){
     var d = data[i]
-    if(true){
-      d3.select("#statesvg")
-      .append("circle")
-      .attr("cx", projection([d.Longitude, d.Latitude])[0])
-      .attr("cy", projection([d.Longitude, d.Latitude])[1])
-      .attr("r", 5)
-      .style("fill", "#1E2832")
-      .style("opacity", 0.6);
-    }
+		if(document.getElementById("companies-dot-box").checked && d.Type.toLowerCase() == "company"){
+			d3.select("#statesvg")
+	    .append("circle")
+	    .attr("cx", projection([d.Longitude, d.Latitude])[0])
+	    .attr("cy", projection([d.Longitude, d.Latitude])[1])
+	    .attr("r", 5)
+	    .style("fill", "#1E2832")
+	    .style("opacity", 0.6);
+		}
+		if(document.getElementById("funds-dot-box").checked && d.Type.toLowerCase() == "fund"){
+			d3.select("#statesvg")
+	    .append("circle")
+	    .attr("cx", projection([d.Longitude, d.Latitude])[0])
+	    .attr("cy", projection([d.Longitude, d.Latitude])[1])
+	    .attr("r", 5)
+	    .style("fill", "#1E2832")
+	    .style("opacity", 0.6);
+		}
   }
 }
 
-d3.csv("data/" + dataFile + "?q=" + Math.floor(Math.random() * 10000000), function(data) { CSV_DATA = data; updateMap("#EA862D", CSV_DATA); });
+
+d3.csv("data/" + dataFile + "?q=" + Math.floor(Math.random() * 10000000), function(data) { CSV_DATA = data; updateMap("#EA862D", CSV_DATA, 0.1); });
 d3.select(self.frameElement).style("height", "600px");

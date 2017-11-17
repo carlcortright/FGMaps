@@ -5,6 +5,8 @@
   <link rel="stylesheet" href="{{ url_for('static', filename = 'styles/mapStyles.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename = 'styles/spectrum.css') }}">
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/css/bootstrap-slider.min.css">
 </head>
 <body>
   <!-- div to hold tooltip. -->
@@ -23,20 +25,32 @@
       </label>
       <input type="submit">
     </form>
-      
+
       <span class='label label-info' id="upload-file-info"></span>
       <hr>
       <h4><a href="/data/examples/example.csv">Example Data</a></h4>
       <h6>*Data must be saved in CSV format</h6>
-    
+
     <br>
     <h3>2. Select Color <span class="glyphicon glyphicon-tint"></span></h3>
     <div class="form-group">
         <input type="text" id="custom">
     </div>
 
+    <h3>3. Adjust Settings <span class="glyphicon glyphicon-cog"></span></h3>
+    <div style="text-align:left">
+      <h4>Color Includes</h4>
+      <label class="checkbox-inline"><input id="companies-color-box" type="checkbox" value="" checked>Companies</label>
+      <label class="checkbox-inline"><input id="funds-color-box" type="checkbox" value="" checked>Funds</label>
+      <h4>Dots Include</h4>
+      <label class="checkbox-inline"><input id="companies-dot-box" type="checkbox" value="" checked>Companies</label>
+      <label class="checkbox-inline"><input id="funds-dot-box" type="checkbox" value="" checked>Funds</label>
+      <h4>Minimum Opacity</h4>
+      <input type="range" min="1" max="100" value="10" class="slider" id="myRange">
+    </div>
+
     <br>
-    <h3>3. Screenshot and Use <span class="glyphicon glyphicon-scissors"></span></h3>
+    <h3>4. Screenshot and Use <span class="glyphicon glyphicon-scissors"></span></h3>
   </div>
 
   <!-- SVG and title -->
@@ -45,10 +59,13 @@
 
 </div>
 
+
 <!-- Create UStates map -->
 
 <script>
-  var dataFile = "{{ LocationData }}"
+  var dataFile = "{{ LocationData }}";
+  var COLOR = "#f78f1e";
+  var OPACITY = 0.1;
 </script>
 <script src="{{ url_for('static', filename = 'js/UStates.js') }}"></script>
 
@@ -56,9 +73,14 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.0/bootstrap-slider.min.js"></script>
 <script src="{{ url_for('static', filename = 'js/map.js') }}"></script>
 <script src="{{ url_for('static', filename = 'js/spectrum.js') }}"></script>
+<script src="{{ url_for('static', filename = 'js/slider.js') }}"></script>
+<script src="{{ url_for('static', filename = 'js/checkboxes.js') }}"></script>
 <script>
+
   $("#custom").spectrum({
       color: "#f78f1e",
       preferredFormat: "hex",
@@ -66,7 +88,8 @@
       showInput: true,
       showButtons: false,
       move: function(color) {
-        updateMap(color.toHexString(), CSV_DATA);
+        COLOR = color.toHexString();
+        updateMap(COLOR, CSV_DATA, OPACITY);
       },
   });
 </script>
